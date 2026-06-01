@@ -491,165 +491,36 @@ function showPage(pageId) {
 }
 
 // Interception et envoi sécurisé du formulaire à Netlify
-function envoyerMonDevis(e) {
-  e.preventDefault();
-
-  const monFormulaire = document.getElementById('devis-form');
-  const btn = document.getElementById('btn-soumettre-devis');
-  const msgSucces = document.getElementById('statut-succes');
-  const msgErreur = document.getElementById('statut-erreur');
-  const formData = new FormData(monFormulaire);
-
-  btn.disabled = true;
-  btn.textContent = "Envoi en cours...";
-  msgSucces.style.display = "none";
-  msgErreur.style.display = "none";
-
-  fetch("/", {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams(formData).toString(),
-  })
-  .then(() => {
-    msgSucces.style.display = "block";
-    monFormulaire.reset();
-  })
-  .catch((error) => {
-    console.error(error);
-    msgErreur.style.display = "block";
-  })
-  .finally(() => {
-    btn.disabled = false;
-    btn.textContent = "Envoyer ma demande →";
-  });
-}
-
-// ══ BASE DE DONNÉES SIMULÉE / LOCALE SANS BASE EXTÉRIEURE ══
-  saveReal(arr){
-    localStorage.setItem('jc_real', JSON.stringify(arr));
-    renderReal();
-    renderAdminReal();
-  },
-  addReal(cat, title, desc, imgBase64){
-    let arr = this.getReal();
-    arr.unshift({ id:Date.now(), cat, title, desc, img:imgBase64 });
-    this.saveReal(arr);
-  },
-  delReal(id){
-    let arr = this.getReal();
-    arr = arr.filter(x => x.id !== id);
-    this.saveReal(arr);
-  },
-  updateReal(id, title, desc){
-    let arr = this.getReal();
-    let x = arr.find(i => i.id === id);
-    if(x){ x.title = title; x.desc = desc; }
-    localStorage.setItem('jc_real', JSON.stringify(arr));
-    renderReal();
-  }
-};
-
-// ══ RENDU PUBLIC DES RÉALISATIONS ══
-function renderReal(){
-  const container = document.getElementById('realisations-container');
-  // ══ RÉCUPÉRATION DES DONNÉES DU CMS ══
-const DB = {
-  // Cette fonction va lire le dossier créé par le CMS
-  async loadRealFromCMS() {
-    try {
-      // On demande au site d'aller lire la liste des réalisations
-      const response = await fetch('/_data/realisations.json');
-      if (!response.ok) return [];
-      const items = await response.json();
-      return items;
-    } catch (error) {
-      console.error("Erreur lors du chargement des chantiers:", error);
-      return [];
-    }
-  }
-};
-  container.innerHTML = items.map(x => `
-    <div class="real-card">
-      <img class="real-img" src="${x.img}" alt="Chantier"/>
-      <div class="real-body">
-        <div class="real-cat">${escapeHtml(x.cat || 'PLAQUISTERIE')}</div>
-        <div class="real-title">${escapeHtml(x.title || 'Isolation / Cloisons')}</div>
-        <div class="real-desc">${escapeHtml(x.desc || '')}</div>
-      </div>
-    </div>
-  `).join('');
-}
-
-// ══ GESTION DE L'ANIMATION REVEAL ══
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('vis'); });
-}, { threshold: 0.1 });
-document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-// ══ SÉCURITÉ DE BASE & ESCAPE ══
+// ══ UTILS ══
+function g(id){ const el=document.getElementById(id); return el?el.value.trim():''; }
+function show(id){ const el=document.getElementById(id); if(el) el.style.display=''; }
+function hide(id){ const el=document.getElementById(id); if(el) el.style.display='none'; }
 function escapeHtml(str) {
   if(!str) return '';
   return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
 }
 
-// ══ FONCTIONS ADMIN NETLIFY IDENTITY ══
-let currentAdminTab = 'subs';
-
-function openAdminClick(){
-  const user = netlifyIdentity.currentUser();
-  if(user) {
-    document.getElementById('admin-overlay').classList.add('open');
-    setAdminTab('subs');
-    loadAdminData();
-  } else {
-    document.getElementById('admin-login-modal').classList.add('open');
-  }
-}
-function closeAdmin(){ document.getElementById('admin-overlay').classList.remove('open'); }
-function closeAdminLogin(){ document.getElementById('admin-login-modal').classList.remove('open'); }
-
-function setAdminTab(t){
-  currentAdminTab = t;
-  document.querySelectorAll('.atab').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.apanel').forEach(p => p.style.display = 'none');
+// ══ LE MOTEUR DE CHANGEMENT DE PAGE (QUI REBLOQUE TON SITE) ══
+function showPage(pageId) {
+  // 1. Masquer toutes les pages
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   
-  document.getElementById('atab-' + t).classList.add('active');
-  document.getElementById('apanel-' + t).style.display = 'block';
-}
-
-function logoutIdentity(){
-  netlifyIdentity.logout();
-  closeAdmin();
-}
-
-netlifyIdentity.on('login', user => {
-  closeAdminLogin();
-  document.getElementById('admin-overlay').classList.add('open');
-  setAdminTab('subs');
-  loadAdminData();
-});
-netlifyIdentity.on('logout', () => { closeAdmin(); });
-
-// Simulation chargement données admin
-function loadAdminData(){
-  renderAdminReal();
-  document.getElementById('admin-subs-list').innerHTML = '<div class="empty-msg">Les formulaires sont stockés de manière sécurisée directement dans votre espace client en ligne Netlify Forms.</div>';
-  document.getElementById('admin-users-list').innerHTML = '<div class="empty-msg">Aucun utilisateur enregistré (comptes désactivés).</div>';
-}
-
-function renderAdminReal(){
-  const container = document.getElementById('admin-real-container');
-  const items = DB.getReal();
-  container.innerHTML = items.map(x => `
-    <div class="real-admin-item">
-      <button class="real-admin-del" onclick="DB.delReal(${x.id})">✕</button>
-      <img class="real-admin-img" src="${x.img}"/>
-      <div class="real-admin-meta">
-        <input type="text" value="${escapeHtml(x.title)}" onchange="DB.updateReal(${x.id}, this.value, this.nextElementSibling.value)" placeholder="Titre..."/>
-        <textarea onchange="DB.updateReal(${x.id}, this.previousElementSibling.value, this.value)" placeholder="Description du chantier...">${escapeHtml(x.desc)}</textarea>
-      </div>
-    </div>
-  `).join('');
+  // 2. Afficher la page demandée
+  const targetPage = document.getElementById('page-' + pageId);
+  if(targetPage) {
+    targetPage.classList.add('active');
+  }
+  
+  // 3. Mettre à jour l'onglet actif dans le menu du haut
+  document.querySelectorAll('.tabs .tab').forEach(btn => {
+    btn.classList.remove('active');
+    if(btn.getAttribute('onclick') && btn.getAttribute('onclick').includes("'" + pageId + "'")) {
+      btn.classList.add('active');
+    }
+  });
+  
+  // 4. Remonter automatiquement en haut de la page
+  window.scrollTo(0, 0);
 }
 
 // ══ RÉCUPÉRATION DES DONNÉES DU CMS ══
@@ -691,17 +562,107 @@ async function renderReal(){
   `).join('');
 }
 
-// ══ PANNEAU ADMIN REPENSER POUR DECAP CMS ══
-function renderAdminReal(){
-  const container = document.getElementById('admin-real-container');
-  container.innerHTML = `
-    <div class="empty-msg" style="grid-column: 1/-1; text-align:center;">
-      Pour ajouter, modifier ou supprimer des réalisations, utilisez l'interface Decap CMS directement à l'adresse : 
-      <br><br>
-      <a href="/admin/" style="color:var(--bl2); font-weight:bold; text-decoration:none; font-size:1.1rem;">Accéder au panneau de contrôle complet ↗</a>
-    </div>`;
+// ══ FONCTIONS LIÉES À L'ESPACE ADMIN NETLIFY IDENTITY ══
+function openAdmin(){
+  const user = netlifyIdentity.currentUser();
+  if(user) {
+    document.getElementById('admin-overlay').classList.add('open');
+    setAdminTab('subs');
+    loadAdminData();
+  } else {
+    document.getElementById('admin-login-modal').classList.add('open');
+  }
 }
-</script>
 
+function closeAdmin(){ document.getElementById('admin-overlay').classList.remove('open'); }
+function closeAdminLogin(){ document.getElementById('admin-login-modal').classList.remove('open'); }
+
+function setAdminTab(t){
+  document.querySelectorAll('.atab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.apanel').forEach(p => p.style.display = 'none');
+  const activeTab = document.getElementById('atab-' + t);
+  const activePanel = document.getElementById('apanel-' + t);
+  if(activeTab) activeTab.classList.add('active');
+  if(activePanel) activePanel.style.display = 'block';
+}
+
+function logoutIdentity(){
+  netlifyIdentity.logout();
+  closeAdmin();
+}
+
+// ══ ÉVÉNEMENTS DE SÉCURITÉ DE L'ADMIN ══
+netlifyIdentity.on('login', user => {
+  closeAdminLogin();
+  document.getElementById('admin-overlay').classList.add('open');
+  setAdminTab('subs');
+  loadAdminData();
+});
+
+netlifyIdentity.on('logout', () => {
+  closeAdmin();
+});
+
+function loadAdminData(){
+  const container = document.getElementById('admin-real-container');
+  if(container) {
+    container.innerHTML = `
+      <div class="empty-msg" style="grid-column: 1/-1; text-align:center;">
+        Pour ajouter, modifier ou supprimer des réalisations, utilisez l'interface Decap CMS directement à l'adresse : 
+        <br><br>
+        <a href="/admin/" style="color:var(--bl2); font-weight:bold; text-decoration:none; font-size:1.1rem;">Accéder au panneau de contrôle complet ↗</a>
+      </div>`;
+  }
+  const subsList = document.getElementById('admin-subs-list');
+  if(subsList) subsList.innerHTML = '<div class="empty-msg">Les formulaires sont stockés de manière sécurisée directement dans votre espace client en ligne Netlify Forms.</div>';
+  const usersList = document.getElementById('admin-users-list');
+  if(usersList) usersList.innerHTML = '<div class="empty-msg">Aucun utilisateur enregistré (comptes gérés via Netlify Identity).</div>';
+}
+
+// Interception et envoi sécurisé du formulaire de contact à Netlify
+function envoyerMonDevis(e) {
+  e.preventDefault();
+  const monFormulaire = document.getElementById('devis-form');
+  const btn = document.getElementById('btn-soumettre-devis');
+  const msgSucces = document.getElementById('statut-succes');
+  const msgErreur = document.getElementById('statut-erreur');
+  const formData = new FormData(monFormulaire);
+  
+  btn.disabled = true;
+  btn.textContent = "Envoi en cours...";
+  msgSucces.style.display = "none";
+  msgErreur.style.display = "none";
+  
+  fetch("/", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams(formData).toString(),
+  })
+  .then(() => {
+    msgSucces.style.display = "block";
+    monFormulaire.reset();
+  })
+  .catch((error) => {
+    console.error(error);
+    msgErreur.style.display = "block";
+  })
+  .finally(() => {
+    btn.disabled = false;
+    btn.textContent = "Envoyer ma demande →";
+  });
+}
+
+// ══ INITIALISATION AU DÉMARRAGE ══
+window.addEventListener('DOMContentLoaded', () => {
+  // Lancer le chargement des photos chantiers
+  renderReal();
+  
+  // Brancher le formulaire de devis s'il existe
+  const devisForm = document.getElementById('devis-form');
+  if(devisForm) {
+    devisForm.addEventListener('submit', envoyerMonDevis);
+  }
+});
+</script>
 </body>
 </html>
