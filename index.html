@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>JC Plaquiste – Jonathan Chabrand</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet"/>
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <style>
+    :root{
+      --bl:#1A5EBF;--bl2:#2472D8;--bl3:#0D4A9E;
+      --bg:#0F0F0F;--bg2:#181818;--bg3:#212121;--bg4:#2A2A2A;
+      --txt:#EDE8E0;--muted:#9A8E7E;--border:rgba(255,255,255,0.07)
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;overflow-x:hidden}
+    /* NAV */
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 40px;background:rgba(15,15,15,0.96);border-bottom:1px solid var(--border);backdrop-filter:blur(16px)}
+    .logo{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;letter-spacing:3px;color:var(--txt);text-decoration:none;cursor:pointer}
+    .logo em{color:var(--bl);font-style:normal}
+    .tabs{display:flex;gap:2px;background:var(--bg3);padding:4px;border-radius:6px}
+    .tab{padding:8px 20px;font-family:'Barlow Condensed',sans-serif;font-size:0.78rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);background:transparent;border:none;cursor:pointer;border-radius:4px;transition:all .2s;white-space:nowrap}
+    .tab:hover{color:var(--txt)}
+    .tab.active{background:var(--bl);color:#fff}
+    /* PAGES */
+    .page{display:none;padding-top:64px;min-height:100vh}
+    .page.active{display:block}
+    #page-accueil{background:radial-gradient(ellipse 60% 55% at 75% 40%,rgba(26,94,191,0.10) 0%,transparent 65%),var(--bg)}
+    /* HERO */
+    .hero{display:grid;grid-template-columns:1fr 340px;align-items:center;gap:60px;max-width:1080px;margin:0 auto;padding:80px 40px 60px}
+    .hero-tag{display:inline-flex;align-items:center;gap:8px;font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;letter-spacing:3px;text-transform:uppercase;color:var(--bl);margin-bottom:12px}
+    .hero-tag::before{content:'';width:20px;height:2px;background:var(--bl)}
+    .hero-location{font-family:'Barlow Condensed',sans-serif;font-size:0.85rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+    .hero-location em{color:var(--bl2);font-style:normal}
+    .hero-name{font-family:'Bebas Neue',sans-serif;font-size:clamp(3.5rem,6vw,5.5rem);line-height:.92;letter-spacing:2px;color:#fff;margin-bottom:8px}
+    .hero-name em{color:var(--bl);font-style:normal}
+    .hero-job{font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+    .hero-neuf{font-family:'Barlow Condensed',sans-serif;font-size:0.82rem;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--bl2);margin-bottom:28px;opacity:.85}
+    .hero-text{font-size:1rem;font-weight:300;line-height:1.8;color:rgba(237,232,224,0.7);margin-bottom:36px;max-width:480px}
+    .hero-btns{display:flex;gap:12px;flex-wrap:wrap}
+    .btn-primary{display:inline-flex;align-items:center;gap:8px;background:var(--bl);color:#fff;padding:13px 26px;border:none;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:0.9rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;border-radius:4px;transition:background .2s,transform .15s;text-decoration:none}
+    .btn-primary:hover{background:var(--bl2);transform:translateY(-1px)}
+    .btn-ghost{display:inline-flex;align-items:center;gap:8px;background:transparent;color:var(--muted);padding:12px 24px;border:1px solid var(--border);cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:0.9rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;border-radius:4px;transition:all .2s;text-decoration:none}
+    .btn-ghost:hover{border-color:var(--bl);color:var(--bl)}
+    /* HERO LOGO */
+    .hero-logo-box{display:flex;align-items:center;justify-content:center}
+    .hero-logo-img{width:100%;max-width:260px;height:auto;border-radius:16px;filter:drop-shadow(0 0 30px rgba(26,94,191,0.25)) drop-shadow(0 8px 32px rgba(0,0,0,0.6));transition:filter .3s,transform .3s}
+    .hero-logo-img:hover{filter:drop-shadow(0 0 50px rgba(26,94,191,0.4)) drop-shadow(0 12px 40px rgba(0,0,0,0.7));transform:scale(1.03)}
+    /* STATS */
+    .hero-stats{max-width:1080px;margin:0 auto;padding:0 40px 60px;display:grid;grid-template-columns:repeat(4,1fr);gap:2px}
+    .hs-item{background:var(--bg2);padding:24px 28px}
+    .hs-num{font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--bl);letter-spacing:1px;margin-bottom:4px}
+    .hs-label{font-size:0.72rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
+    /* VALUES */
+    .values{background:var(--bg2);border-top:1px solid var(--border);padding:70px 40px}
+    .values-inner{max-width:1080px;margin:0 auto}
+    .section-head{margin-bottom:40px}
+    .section-tag{display:inline-flex;align-items:center;gap:10px;font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;letter-spacing:3px;text-transform:uppercase;color:var(--bl);margin-bottom:10px}
+    .section-tag::before{content:'';width:20px;height:2px;background:var(--bl)}
+    .section-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.8rem,3.5vw,2.6rem);letter-spacing:2px;color:#fff}
+    .vals-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:2px}
+    .val-card{background:var(--bg3);padding:28px 24px;transition:background .2s}
+    .val-card:hover{background:var(--bg4)}
+    .val-icon{font-size:1.8rem;margin-bottom:12px}
+    .val-card h3{font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#fff;margin-bottom:8px}
+    .val-card p{font-size:0.85rem;color:var(--muted);line-height:1.6;font-weight:300}
+    /* SERVICES */
+    .services-wrap{max-width:1080px;margin:0 auto;padding:70px 40px}
+    .services-grid{display:flex;flex-direction:column;gap:2px;margin-top:40px}
+    .svc-card{background:var(--bg2);display:grid;grid-template-columns:70px 1fr auto;align-items:center;gap:24px;padding:24px 28px;border-left:3px solid transparent;transition:border-color .2s,background .2s}
+    .svc-card:hover{background:var(--bg3);border-color:var(--bl)}
+    .svc-icon{font-size:1.9rem;text-align:center}
+    .svc-name{font-family:'Barlow Condensed',sans-serif;font-size:1.05rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#fff;margin-bottom:5px}
+    .svc-desc{font-size:0.85rem;color:var(--muted);line-height:1.6;font-weight:300}
+    .svc-btn{white-space:nowrap;padding:9px 18px;font-family:'Barlow Condensed',sans-serif;font-size:0.75rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;background:transparent;border:1px solid rgba(26,94,191,0.4);color:var(--bl2);border-radius:4px;cursor:pointer;transition:all .2s}
+    .svc-btn:hover{background:var(--bl);color:#fff;border-color:var(--bl)}
+    .services-note{margin-top:32px;display:flex;gap:14px;align-items:flex-start;background:var(--bg2);border-left:3px solid var(--bl);padding:18px 22px;border-radius:0 4px 4px 0}
+    .services-note span{font-size:1.2rem}
+    .services-note p{font-size:0.88rem;color:var(--muted);line-height:1.6}
+    .services-note a{color:var(--bl2);cursor:pointer;text-decoration:underline}
+    /* CONTACT */
+    .contact-wrap{max-width:900px;margin:0 auto;padding:70px 40px}
+    .contact-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:40px}
+    .contact-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:36px;display:flex;flex-direction:column;align-items:flex-start;gap:12px;transition:border-color .2s}
+    .contact-card:hover{border-color:rgba(26,94,191,.4)}
+    .cc-icon{font-size:2.2rem}
+    .cc-label{font-size:0.7rem;letter-spacing:2px;text-transform:uppercase;color:var(--bl2)}
+    .cc-val{font-size:1.15rem;color:#fff;font-weight:500}
+    .cc-val a{color:#fff;text-decoration:none;transition:color .2s}
+    .cc-val a:hover{color:var(--bl2)}
+    .cc-sub{font-size:0.82rem;color:var(--muted);line-height:1.5}
+    .cc-btn{margin-top:auto;display:inline-flex;align-items:center;gap:6px;padding:10px 20px;font-family:'Barlow Condensed',sans-serif;font-size:0.8rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;background:var(--bl);color:#fff;border:none;border-radius:4px;cursor:pointer;text-decoration:none;transition:background .2s}
+    .cc-btn:hover{background:var(--bl2)}
+    .cc-btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto}
+    .contact-zone{margin-top:40px;background:var(--bg2);border-radius:8px;padding:32px;display:flex;gap:32px;align-items:center;border:1px solid var(--border)}
+    .cz-icon{font-size:3rem;flex-shrink:0}
+    .cz-title{font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#fff;margin-bottom:8px}
+    .cz-text{font-size:0.9rem;color:var(--muted);line-height:1.6}
+    /* DEVIS */
+    .devis-wrap{max-width:900px;margin:0 auto;padding:70px 40px}
+    .devis-grid{display:grid;grid-template-columns:1fr 1.7fr;gap:60px;align-items:start;margin-top:40px}
+    .devis-steps h3{font-family:'Barlow Condensed',sans-serif;font-size:0.85rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--bl2);margin-bottom:24px}
+    .step{display:flex;gap:14px;margin-bottom:20px;align-items:flex-start}
+    .step-n{width:30px;height:30px;border-radius:50%;background:var(--bl);color:#fff;font-family:'Bebas Neue',sans-serif;font-size:1.05rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .step strong{font-size:0.9rem;color:#fff;display:block;margin-bottom:3px}
+    .step p{font-size:0.82rem;color:var(--muted);line-height:1.5}
+    .form-box{background:var(--bg2);border-radius:8px;padding:32px;border:1px solid var(--border)}
+    .fg{display:flex;flex-direction:column;gap:7px;margin-bottom:14px}
+    .fg label{font-size:0.7rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
+    .fg input,.fg select,.fg textarea{background:var(--bg3);border:1px solid var(--border);color:var(--txt);padding:12px 14px;font-family:'Barlow',sans-serif;font-size:0.92rem;border-radius:4px;outline:none;transition:border-color .2s;width:100%}
+    .fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--bl)}
+    .fg select option{background:var(--bg3)}
+    .fg textarea{height:110px;resize:vertical}
+    .fg-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .form-submit{width:100%;padding:14px;margin-top:4px;background:var(--bl);color:#fff;border:none;border-radius:4px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:0.95rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;transition:background .2s,transform .15s}
+    .form-submit:hover{background:var(--bl2);transform:translateY(-1px)}
+    .form-submit:disabled{opacity:.6;cursor:not-allowed;transform:none}
+    .form-ok{display:none;margin-top:14px;padding:14px;background:rgba(26,94,191,.12);border:1px solid var(--bl);border-radius:4px;color:var(--bl2);font-family:'Barlow Condensed',sans-serif;font-size:0.95rem;letter-spacing:1px;text-align:center}
+    /* REALISATIONS */
+    .real-wrap{max-width:1080px;margin:0 auto;padding:70px 40px}
+    .real-intro{font-size:0.95rem;color:var(--muted);line-height:1.7;max-width:600px;margin-top:16px}
+    .real-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-top:40px}
+    .real-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;overflow:hidden;transition:border-color .2s,transform .2s}
+    .real-card:hover{border-color:rgba(26,94,191,.4);transform:translateY(-3px)}
+    .real-img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;background:var(--bg3)}
+    .real-img-placeholder{width:100%;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;background:var(--bg3);font-size:3rem;color:var(--bg4)}
+    .real-body{padding:18px 20px}
+    .real-cat{font-family:'Barlow Condensed',sans-serif;font-size:0.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--bl2);margin-bottom:6px}
+    .real-title{font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#fff;margin-bottom:6px}
+    .real-desc{font-size:0.82rem;color:var(--muted);line-height:1.5}
+    .real-empty{text-align:center;padding:60px 40px;border:1px dashed var(--border);border-radius:8px;color:var(--muted)}
+    .real-empty .re-icon{font-size:3rem;margin-bottom:16px}
+    .real-empty p{font-size:0.9rem;line-height:1.7}
+    /* ADMIN */
+    #admin-overlay{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.92);backdrop-filter:blur(8px);align-items:center;justify-content:center}
+    #admin-overlay.open{display:flex}
+    .admin-panel{background:var(--bg2);border:1px solid var(--border);border-radius:10px;width:min(96vw,960px);max-height:90vh;overflow-y:auto;padding:40px}
+    .admin-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:32px}
+    .admin-top h2{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:2px;color:#fff}
+    .admin-close{background:none;border:none;color:var(--muted);font-size:1.5rem;cursor:pointer;transition:color .2s}
+    .admin-close:hover{color:#fff}
+    .admin-tabs2{display:flex;gap:2px;background:var(--bg3);padding:4px;border-radius:6px;margin-bottom:28px;width:fit-content}
+    .atab{padding:8px 20px;font-family:'Barlow Condensed',sans-serif;font-size:0.78rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);background:transparent;border:none;cursor:pointer;border-radius:4px;transition:all .2s}
+    .atab.active{background:var(--bl);color:#fff}
+    .sub-card{background:var(--bg3);border-left:3px solid var(--bl);padding:18px 22px;margin-bottom:10px;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;position:relative;border-radius:0 4px 4px 0}
+    .sub-date{position:absolute;top:12px;right:16px;font-size:0.68rem;color:rgba(154,142,126,.45)}
+    .sf label{font-size:0.65rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--bl2);display:block;margin-bottom:2px}
+    .sf span{font-size:0.85rem;color:var(--txt)}
+    .cli-card{background:var(--bg3);padding:16px 20px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;border-radius:4px}
+    .cli-name{font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:600;letter-spacing:1px;color:#fff}
+    .cli-info{font-size:0.8rem;color:var(--muted);margin-top:2px}
+    .cli-date{font-size:0.68rem;color:rgba(154,142,126,.4)}
+    #admin-login-modal{display:none;position:fixed;inset:0;z-index:400;background:rgba(0,0,0,0.92);align-items:center;justify-content:center}
+    #admin-login-modal.open{display:flex}
+    .al-box{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:40px;width:min(92vw,380px);text-align:center;position:relative}
+    .al-icon{font-size:2.5rem;margin-bottom:12px}
+    .al-box h2{font-family:'Bebas Neue',sans-serif;font-size:1.7rem;letter-spacing:2px;color:#fff;margin-bottom:6px}
+    .al-box p{font-size:0.85rem;color:var(--muted);margin-bottom:24px}
+    .al-box input{width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--txt);padding:12px 14px;font-family:'Barlow',sans-serif;font-size:0.92rem;border-radius:4px;outline:none;margin-bottom:10px;transition:border-color .2s}
+    .al-box input:focus{border-color:var(--bl)}
+    .al-err{color:#ff5555;font-size:0.8rem;margin-bottom:8px;min-height:18px}
+    .al-close{position:absolute;top:14px;right:16px;background:none;border:none;color:var(--muted);font-size:1.3rem;cursor:pointer}
+    /* REAL UPLOAD ADMIN */
+    .real-upload-box{background:var(--bg3);border:2px dashed var(--border);border-radius:8px;padding:28px;text-align:center;cursor:pointer;transition:border-color .2s;margin-bottom:20px}
+    .real-upload-box:hover{border-color:var(--bl)}
+    .real-upload-box input{display:none}
+    .real-upload-box p{font-size:0.85rem;color:var(--muted);margin-top:8px}
+    .real-admin-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-top:16px}
+    .real-admin-item{background:var(--bg2);border-radius:6px;overflow:hidden;position:relative}
+    .real-admin-img{width:100%;aspect-ratio:4/3;object-fit:cover}
+    .real-admin-del{position:absolute;top:6px;right:6px;background:rgba(0,0,0,.7);border:none;color:#fff;font-size:1rem;width:28px;height:28px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s}
+    .real-admin-del:hover{background:#c0392b}
+    .real-admin-meta{padding:10px 12px}
+    .real-admin-meta input,.real-admin-meta textarea{width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--txt);padding:6px 8px;font-family:'Barlow',sans-serif;font-size:0.8rem;border-radius:4px;outline:none;margin-bottom:6px}
+    .real-admin-meta textarea{min-height:70px;resize:vertical;font-family:inherit}
+    .real-admin-meta input:focus{border-color:var(--bl)}
+    .btn-sm{padding:8px 18px;font-family:'Barlow Condensed',sans-serif;font-size:0.78rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;border-radius:4px;cursor:pointer;transition:all .2s;border:none}
+    .btn-logout{background:transparent;color:var(--muted);border:1px solid var(--border)}
+    .btn-logout:hover{color:#fff}
+    /* FOOTER */
+    footer{background:#0A0A0A;border-top:1px solid var(--border);padding:28px 40px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+    .f-logo{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:3px;color:var(--txt)}
+    .f-logo em{color:var(--bl);font-style:normal}
+    .f-copy{font-size:0.75rem;color:rgba(154,142,126,.4)}
+    .f-admin{background:none;border:1px solid rgba(154,142,126,.15);color:rgba(154,142,126,.3);padding:7px 14px;font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border-radius:4px;transition:all .2s}
+    .f-admin:hover{border-color:var(--bl);color:var(--bl)}
+    /* RESPONSIVE */
+    @media(max-width:900px){
+      nav{padding:0 20px}
+      .tabs .tab{padding:7px 12px;font-size:0.7rem;letter-spacing:1px}
+      .hero{grid-template-columns:1fr;padding:50px 24px 40px}
+      .hero-logo-box{display:flex;justify-content:center;margin-top:32px}
+      .hero-logo-img{max-width:200px}
+      .hero-stats{grid-template-columns:1fr 1fr;padding:0 24px 40px}
+      .values{padding:50px 24px}
+      .services-wrap,.contact-wrap,.devis-wrap,.real-wrap{padding:50px 24px}
+      .contact-cards{grid-template-columns:1fr}
+      .devis-grid{grid-template-columns:1fr;gap:32px}
+      .admin-panel{padding:24px}
+      footer{padding:20px 24px;flex-direction:column;text-align:center}
+    }
+    @media(max-width:600px){
+      .tabs{display:none}
+      .hero-stats{grid-template-columns:1fr 1fr}
+      .svc-card{grid-template-columns:50px 1fr;gap:14px}
+      .svc-btn{grid-column:1/-1}
+    }
+    .reveal{opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease}
+    .reveal.vis{opacity:1;transform:none}
+    .empty-msg{text-align:center;padding:36px;color:var(--muted);font-size:0.88rem;border:1px dashed var(--border);border-radius:4px}
+    .emailjs-note{font-size:0.75rem;color:rgba(154,142,126,.5);text-align:center;margin-top:10px;line-height:1.5}
+    .emailjs-note a{color:var(--bl2);text-decoration:none}
+  
+    .auth-card{margin-top:28px;padding:20px;background:var(--bg2);border-radius:8px;border:1px solid var(--border)}
+    .auth-card strong{display:block;color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:.9rem;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px}
+    .auth-card p{font-size:.84rem;color:var(--muted);line-height:1.55;margin-bottom:14px}
+    .auth-actions{display:flex;gap:10px;flex-wrap:wrap}
+    .auth-actions button{padding:9px 14px;border-radius:4px;border:1px solid var(--border);background:var(--bg3);color:var(--txt);font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:1px;text-transform:uppercase;cursor:pointer}
+    .auth-actions button:hover{border-color:var(--bl);color:var(--bl2)}
+    .devis-auth-warning{padding:14px 16px;margin-bottom:16px;border:1px solid rgba(26,94,191,.35);border-radius:6px;background:rgba(26,94,191,.08);color:var(--txt);font-size:.85rem;line-height:1.55}
+    .devis-auth-warning a{color:var(--bl2);cursor:pointer;text-decoration:none;font-weight:600}
+    .admin-secure-note{padding:14px 16px;margin-bottom:18px;border:1px solid rgba(255,255,255,.08);border-radius:6px;background:var(--bg3);color:var(--muted);font-size:.84rem;line-height:1.55}
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="#" onclick="showPage('accueil')">JC <em>Plaquiste</em></a>
+  <div class="tabs">
+    <button class="tab active"      onclick="showPage('accueil')">Accueil</button>
+    <button class="tab"             onclick="showPage('services')">Services</button>
+    <button class="tab"             onclick="showPage('realisations')">Réalisations</button>
+    <button class="tab"             onclick="showPage('contacter')">Contacter</button>
+    <button class="tab"             onclick="showPage('devis')">Devis</button>
+  </div>
+  <div style="width:120px"></div>
+</nav>
+
+<div id="page-accueil" class="page active">
+  <div class="hero">
+    <div>
+      <div class="hero-tag">Artisan qualifié · Pyrénées-Orientales</div>
+      <div class="hero-location">📍 Entreprise basée à <em>Bompas</em> (66)</div>
+      <h1 class="hero-name">Jonathan<br><em>Chabrand</em></h1>
+      <p class="hero-job">Plaquiste</p>
+      <p class="hero-neuf">Neuf &amp; Rénovation</p>
+      <p class="hero-text">Artisan sérieux avec <strong>26 ans d'expérience</strong> dans les Pyrénées-Orientales. Plaquisterie, isolation, aménagement intérieur et finitions tous corps d'état. Devis gratuit et rapide sur tout le département 66.</p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="showPage('devis')">Demander un devis →</button>
+        <button class="btn-ghost"   onclick="showPage('services')">Voir mes services</button>
+      </div>
+    </div>
+    <div class="hero-logo-box reveal">
+      <img class="hero-logo-img" src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCATmBOYDASIAAhEBAxEB/8QAHQABAQACAgMBAAAAAAAAAAAAAAECAwYHBAUx/EAGcQAAIBAgQDBAQGBg4YBQQCAwABAgMRBAUhMQZBYQcSUXEIE4GRFCIyobHRFVJicrLBFhcjM0JzdHWCkpOUs/AJGCQlJic0NTY3Q0ZTVFVWY2RlhZWi0uFERYOEwiijpPE4V7RHZv/EABsBAQEAAwEBAQAAAAAAAAAAAAABAgMEBgUH/8QAOREBAAEDAQMJBQgDAQEBAQAAAAECAxEEBSExEhMiMkFRUnGRBmGhsdEUFTM0U4HB4RYjJPBCQzX/2gAMAwEAAhEDEQA/APkAcygzQRQUKAFW9wigBBQoADkBrsAFtSgJAZabAcggL0L7SFAXuB8wAhQr2LYCoLUL3FAcg/mKQBdFWxFqyrxAyRVcm1guaAo5dAgEXkX5ybF5dQpqVP3k1ABjQq8xYAti79CfSEwMmRabDmUB5h/MABSrYhVuEAW2o3QEuCj2XAIyT8DFPkUB5kLyZLckBVqZcmYrbcoUY5mWniQANShAQF+gIBZmVgrBvqAW9gtxz1CAy+cciIy9ugGPO4K9tBbYACk8gmE5jkUdAJbTUqACqvmGlvEPaxPaBQgvEBFV+ega01YsVgTZoeQ5hbWCnMavyL0FubARegY5E6gW9tCq3uMV0RktgFyrUn0DUA9+hCrmPYEYhleoARReXiEvAcncKctRzsORerdwC0di6boi2L5bBE1bIyvcjYEZNL7l5EfUBfUj8CsPdhUV1qHewLsEGQrHPYCrcr9wj4Ir2CsXsRabPQye+5LdQJ5blS5IqXUgFtqYPXYz+gj1Aw26Eepk11I7gRFRFuVgOfgHZ8irbcjQAjLYPYDHy1G2xfBMWAxZEZOxLK4GPIuz1LzJzAjIV3ZAF3bYPQtyMCLxD6gATmNDJ/NzJ15ANyMvQj2AwfQczJk6gYu5HYyaI/ewiEKLBUHQvPctvmA1tGLNj3MX4AY8gt9AALfwBHuAPBDBUEPaXqQvUKFIOQFWgW4RUwKGug6DoBFcosAFjJC1tbXL7wG5bEKAHIX94AvQctRyKuoEViohQLyuErBF1Ai1Ktx0KBF5laledwC8i7ALcC8ieYoCgcupX4gTYu4QCKik1tqLexgB1uXkAqbbFDG+gAAW3AoQKgHQLxHJj2AXbZgapouq1AK1y+0FSfiBOly+wciAXqEvnBeYFW25SeZeenMCaBp+Bb+IAg5dDLVEAj33CKLdQIrJEtYvMK/mBfAMLx3C6eAEtsVAJc9kEXYtvcS9xpfyAFS1C8yhUHQuyI9GA8iWuXQdQFrb8y8ttPMn8dTJeAEa1vsR+BkQCaNbAuthfkwJu0LF5bF5gS3UF5EAdWFuXlceFwHK19RyL5oac+QGP4iGRNbMCc/EhnqRrqBj7Rbe5eVxbXxAi9gsW3IoGNtGW1y+ZQI0rDS1kPMq2AciWuBrfXQB9BLPmZWfkH0AxehHcr3Jb3ATboR6mRAMdtCsbMW5AF9Ataz5FV0Oe4EfQc9CvrqHt0AxSD23Kt9OQ5AY8tSeRlLfXQx/EBHsTYy9hAMbXW46l08ieN2BOdilXIjAgtqZa6IgEQexXcnQBbQjXgVMmm6Aj5WJYvPxD6gYtciePiZvbUjYGCWost+ZkTRAY21BkyWAxe5GZPYgGDJyMnzMWBPaBsAPC5FRH4FVwKAFvuAsULnqVARFQQ5AUBajoBeREUIDJBEXmVAOZdQOdrgChbl5gFYAcvEALDUAVF5AX03Au24W6IupQLbqB8xVuAHkXkPIAtGZLXzMeZelgA35jmVcgHK4LyHIB+MX1FrdQgFhur8gVbgEi20HLcALcyrkNQARQXmBNtSrxCXQvICkfzl5XuOQEfQiMvJFAnJDdf8Acthy1AgZR03AhV7h46lt4PQCK7MmElYu4Be4qIigA11Fw973AeZQAAZV9Ie24AeW45lsBOg8PAvXYjWlgBSa8wr2uA5DfyKPaBCq2w9pWtghbTQj8C/SQKLYeaFtjJcwC8iJa3Ml/wDsaX3sBj1HVC2nUAPoGviVbh+8AVa+JF4vUq2AMJalD1AiZbe0aDyAW0IzIlvDcDF9dWC8x7ACMlzaJd+Ny6gQr2fgXqh194GPkLGWr2ZAJb2k63Lrux7UERrmOfUtnfxY5+AU533J7C/QHumBPIdS38RzeoBN35B7+I2528AwJyHtF9dhyAX0DWiuXkH0AxdjF2M2upi/MCb/AP7DL+IIDHu2W5Vzuy2XjqOQDluRpPoX6CALaaciF5kb1AnLzGg230FwMWOe5lz/AI6EaswCT8djHnoUoGNn5k2s2XlqyMCILctutw7gTmOQWg/Q6ARkMn5mPICeRGtDLdEsrgCF62I1qBGRmT+gj2AgHXkAHLRE8ii3suBi7peBHsZPfcxtuBJGDWhmzFgYpAoA8EcxyHIClImZcgIyjYbAAGUCeZRbmAKggvEK4FXmZfMQICvRl5E5l8gCKBfqA5jW46F5ALBDnuFuBV43ALtYA1YIFAi87GS6MhUBQmyFAB6sW1KgHtKvMBbgVeJSJl5gOYtv4l9ofQCDmXqTcC8rF5+BPaUCgIdAL8wHIIC26ltuuYHQB5ixV0HmAFi2v1FvPUCcgrXL7Sc2AL5k/EVALDnexSpc0A8Ck2TbL9AF8yeQ8RyasA2C2FugAtloNdHcX58wBeY6hPkEAKvmDvsL9QBXd2JrboVbAQW/7Dw3KAXIe3UX13uOStqBVppcK9uhOY2AulhZ3XiOZVuBPmuZJaaMC4BkexkR2b2AnUdLF02QQEQZba9ByYGKKPYWwBW5sqXiReZktvACdbMdCvwJzCGzG5XYqpUd9SNauxX1FtQiXvpcvLUtne9y2sBHvfkNW9RptYaXCntJ7TJ+GpGr8giIW1Mr8x0CpbmEr7F9liMDF/SCtPVEYQWml9xp5C/uHnuFNla4b18BqPECbFViPzLqBUNwi662AxfzEsjK225NQMbdRqjK3UnNATl4E1vfcr6jl4gSwvp4WDvqh7PnAbakdi6EdgJz3DXItuZLATkTwTMn1JbQCchZLqXkLc+QGPMPcvMgE1v5DTTQpLctwJpvyHUy2I9mgI7GLsZWMX84EWg6l2fIn4gD+Yj9pdNx7QI9iPmZbEsrbgRqyJ7TLkR7AQWd/FocgBNiPTmVgDBmLM5GEnrcCagqAHgBDlqEEEZEKuoUA8NCgCrYnMoC2o5joyoCF2BQAVx0LzAciq1iLct9QK/oBF0Ml7gIVdC/MTn4AWxSF5oAi2BQHUltiiy5gNeRVuReJfmACxUEgKrDoFsACC3uLFAFQAFWw5BaaFAgQKuoDmUEdwKvPUq3IigC8h4C2moFFhyKgCRWmmEhydwL4WI97Nl5BgQWHO5emgEsrbltoXYnMCovQLoHsA8R5heFwA21LvpceS0HIATfcysTfcChoLxLzAgMmR7gFtoxyuFfbkX5wCWgswt9C9AC1Q+Yy8yeYEtyC23AtrsA5Brmh85faAsrhDyLcAuo5jwC2ALoX6CalV+YD2j5yvl4kAEvpsB1ApbD2WC2AW63L0sPaR+QDx1uELeBVa19wFvENbK+pQ0EY6eJbapBjl1ALbxHii9LEtoA3MdbdDJ76k62Ci20Lr4DlqX2gRPTwLy11uA7663APwMX01Mt149SS56gTdeFyNcvAvt1FuYEd78iL5jK3Ia36AY8rhFe2otr4AY8xsZPcxAq8zIi09hVuBUtA+XUXH0AR8zFra2hkGBg9yGTRj4gNtya3KtCAI8rFtvzIiq3/YBYj+YpPoAn4gVLkF0Ax9pXsUlgMWYmTMQD1QHK2wXmAWgd7Bb2F9bgTS/Mga08OoAjXJGJm9jFgTluLa8yoWAjSsORQBOdzHUytfmQCfiJZcysj+YBbUjMtyPcDBrqYy05mbRi9bgY89NgGAPAsUcxzApSctCoC3BEAAQ8RqBbl8kQugBFXQiMkARdBcewDHZlRdmQDJbFW5EtAtgMghzLsAKiK5bgVWCQ2HIChbbEWxeYAquRFAIo5eBdAIVbDYAAGVe4AtOReepFsXzAB7AcwCMkYroXqBQtyrqHoAYHkAKXoRO/IoFCJe6LyArY5Bl5gXqRgvLxAi3d0X6RbcvQB84KiX0AvS45a7jS/QoEHSw03YAbtlIupbARh6l5l5gEXna5Ey62AjHzlD5WAi8fmMkiIq28wHIfxRV12J7wF9Opk/eYoquABVpz1HzgTyCWhb6aj3gPC5OZWw+gDlogOout+QDnd3LfkuZAvF6gW9x7yPwuNWBfAWVtLl9g9qAdSrwZPB3HMBz6lGrAFts/cGNtfEW11Av0sMLa+qF9uQEWgtce65deQD2+0Pp7gtrFAxlvyIlZmXmg7WAInjoyrVXZLIIbak2uCc9Aqhk59SgLeBWXw3D8wMdvEW8GXmLW5ATxsTmZcupHqBLeLJboZa8xyvuBEHtqX2k3XiAvp+IXFtdEVeYE/FyGvgFvcjvYB+iFtWF56FQGPuMWuVzO/sMXqBig30KH8wDXwFtd7FXLUMDEProVrx1C5AS2vQPaw9pbAYNGPUzd1utjHTqBOthurDYW6AS3uLpbVCwfJgY7LxI9zJ+JAIYsr06EYFSGzC6jWwDbcPa6KTdbgN1oRoADFkZlIxfiAQfkAwMJczEzl4cmYtb9AMXvYFAHgLbqRgbgPaXlvqB84F0HKwABFQ9oAFuTmWysAHmOQAuviUnPQIDIDkXoAWxSFAq38S+ZDICBAIClRiVbgVablXIiKwHKxkY8yqwFRSIqAch4MACqxPZYFAFVwv4scwJ7S8tCcwtwKVPQiLzAyTFtSIyW4EL5aF56olgJfqCv3C3iBVt5GXgyIebArHTkOdwlyANaGWljFeJVowMlsOeugC8gGlxuBtuBd1uivyINQAHPkLOzAvMeOtyMP8AiwKP43Hs0AFHtIvMysAXsuZMiXMXv9YBb2ewCKAvr4k5lSXPUJWu2AXnuXzIl4alb8QHMDlzDtcCLTcAK/g2ALruLaJIJLcAi6u2hVuS1kBHdkV7F21vuLcwAt4FV7a8xv5AFydyp2sydEPYA8y7eYWg23AdByLp4kt1Ay5be8m7CC+cByK/boNWtBb3AUl2FyuroeSuATLs/Ei9jKgHmHZ7k5vW5Vtt7QJ0JdPkZPz0MXffcB+MPQsduYfsAj5C1+hdH0FgKn4/OCFV/MBy13Dt4al5teJHrstQHInPYLXyHXX3gPPUj38C8rjnvoBj+Iyto9AuovbbQBoiFd+RHy0AnPwJa+l9S7fULASxGtCvqPICJ9Nhz03C/ii8+SAx8VuF0LbqHyAW0/7E3KiAOepGtfEtvnLbQDH2aE5dC2sW2iAwe25j9BnzIlrt/wBgMeQ6GTWiMQL9JH5FvoR9AMWuRPDQy/jYj6bAY8hYy530I/cBLK1iP+LMnr4KxHsBNfEul9SLfYfOBGrixl4q5HuBi9r7kMmkR/MBLe0jLptyIwMfYYmy2hgwMQVgD1wCGgFsEC2AaAalAW8QUWAfSHvsXkEACBQHIFCAF36BdABUGXl5DkA8CkL7AD30HMBAVdQQuoFXmUnMbAULcLcIDJWAFtQHmy8iLYAVCO+oRUBQABPAamVtCWAal8GS1i6gUuyIi8wL5jqS5eoBAcygEUhV5MC89h0CK7XQEdlv7ir2EAGfkH13IPECtFtqvAiKreQC3UblXUgFLYxXQq2AvIltfxlReXiBLadCW5oyaXO5LcgKl4K5bahbcwwHtHNrmTZFAqV9hrbkF48i+QBbF/8A2T2FAabLYns1DfPoPICDlctrq7Fn4AFuVrfwIvAqfPQAkVJaIl/pCAujeruyb9Sp8iWvuBV1JYqXmOWgDfyJ5FHUAr+HmW19dRbmkGAW6utA1zsVcyW533AcwtUFsOaAqXUr16EKvC4E8fAcuvUul9iP6QHUcnoPcL67AHcLysXYMAti62WnkRX11RUtOoC3lqR2toXloxLxAJWZNxz0RXsBNPAW8UXR7vUPcCW8blSd9ha3sCer19gB+Qle+uwXT2jQCW1J9Iez1H8bgXRa7k92gT6hAVLQWu7aDQv0AYtX5WMdb28DLkRp3AnkXzdhbQNaATW3UWKvnGoGNrbpltqk9y68wBLWI0ZPyRG3vcCaj2k1sXzAO6fjbkT3F/jcnuAllbmTwRlcx8AG73Q5dC2t0JyfjzAj0aszF6MrZH0Agt4Malt4ARfQYoyJqBLeAavsW2gtvyAxemnMPUr2IwJzHO3gVc7B28gJ5EfQyZjzuBGRrncytoOdwMNX5B/MV6akYEIzK29zECW1tYFa1AHq7FSAArGwvrsNLANDLkT2Dn1AvIAbgUbkKBS21IVcgCsW3iRF1Aq+cW1uAAXUpAgMl0GxCgHogF1L8wDYC3iVbgPYFyC8wBUjK2pE9CoAXqRdSoAAhzAIqBUAehUuhPYVPUCgb7l9oE94WhGOWgGWuw8GRe0vtAW1A2Ly2AeZeexOo5gXkXkRbDqBnp4jTkRFfigHPYbEZeQD6Cq4sOdgM14jZeJPoKA5jS4v0I3uBbb9S8icrhNrkBl7xz2ZC6X2AXsAudxcC6F5bEv0Lf2gOd7bkt032D5BLUBct9Cbhe9gZJl8LGKF76AHsTW9ivVbC23gBVa1jJq3mYxfiZK3iBLey4110J03Hm9gC8LC3UdSoArFXtuF7xr7QA6X8iq1r8hz5gRe8qtYi+cuttgLystw1ze1gvZcMByuxbTYW05C2niBV4MNe0bDbZAHZBewXuTx0YF18CbvUr11syeYBez3BO+mhOWoSAy6rUfodByXgHvYAud9B1vqx1urdS8tQK7sO3hYl9S35/MBH47Eemi06leu5H0+cBy5DdsbBWd02BQrvVsPdhaptIB0YemxfLYxYCxfYF421AGD30LzLzSsSwFT02MvNGK38C8tmAt5mOz295lcj35sCe8Aa68gFrcv+wi2xz0QT8EA57kZbbdCATVK4567hh6AS2l7k26GS0exjf3AXUnPZj3IAQbofML6XAmo0THivEN+0DHmY8zJ7C2oGK9xkRBXvsAVtitE8PxFYEa8CWRfxBrTwAwa18LC1+TKRgTmV632sRB7gOu5H5GXzE01AnIF622MQHlyMXry0K29RbwAjRHuXS9yPZgEtQFoAPVPYWBQicy+Y3C2Cq9wABeRbE6lAFsCAUpPIAUyRiioCvz1AHIAF5FXQAC2IZddAC8gFsWwDbkVE8ygAAt9wL7AtAwBbFXIgW4F6lt4i2gsBQiFQDwHtHgAMkEQvRgGTdlFgLyKTZF0Ac9BzHTYPkvnAc2h8we1kOVwLb3FT02IX3gW/K2pl05+JiuRU+YBeFkXkNOo+gAkXlqPZ7RysA5eBSMLfWwBu73Lu9R1e4W9gKGunkEtOhdfMB7B0sL3Hhe4AO7fIeY021YFXzEb8CmOoGS1ZSIuytpoBbeLMd14mXMjAbF2Y57aCwBdblJyGoFXsLrYxReQDTzC15PzDQ62Ae4IcgvF6eYF3Q9ouFryAy16ALb2DwAa72J5lepPb7ALF25alV9uZEtORVrqBl4rR33D35ku9NBdbICee5jcy00vsRoCoXSdr6E9+plytoBjrbcb8hu9ABUvOxeaFvcPF205XAPTcniti89ifQgKmPHoFe2pYroASfMfOUPbSwE9zG7v0KuvLcq8QMLOwZlJaa6GLAvTT2kbtoNfMjV0BeT8OoXv8iNIPa3IDJX1Dt4WXMlncq9oB+H0kWm+hdPAl214gRfxuN9yryJbTqBbeAe3sGumhfZsBjbe45/QVr/sR7XuwIvALkOnMX0Aqvq/xE5K1i78vMP5XzAEiPZPUba206lsBj7bEd/Er0tuTrZgR7omzK9fYS3mA1vtYcxsreAAxTsPItuthYBbmTltqZJW0D0XLUDCz1C8zIltQJr5BmXQnLcCW1Iy8uZHyAns0MdOZeQtqBLMeGhbEtowH0k38w9GR7ATxD8SvrsT6QJzI/Ayat4EadtgMXe5GXle2xPHxALXcCwA9XyKQoDkUFsAsCgB0FgEA2ZeZCoAXkC8wCKLDmA+kAvsAqFgtAAt4oq8tgPaBV5FexEi7ARi2hQBPYVDwKtwLboLBdS2AngVblWjROYAttAty8gAXiPZqAHgX3E+YoBBabBBAXkVdSWKBQ+fiOYAI" class="hero-logo-img">
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="hs-item"><div class="hs-num">26</div><div class="hs-label">Ans d'expérience</div></div>
+    <div class="hs-item"><div class="hs-num">100%</div><div class="hs-label">Garantie décennale</div></div>
+    <div class="hs-item"><div class="hs-num">66</div><div class="hs-label">Département desservi</div></div>
+    <div class="hs-item"><div class="hs-num">Gratuit</div><div class="hs-label">Devis sous 48h</div></div>
+  </div>
+</div>
+
+<div id="page-services" class="page">
+  <div class="services-wrap">
+    <div class="section-head">
+      <div class="section-tag">Savoir-faire artisanal</div>
+      <h2 class="section-title">Mes Services &amp; Prestations</h2>
+    </div>
+    <div class="services-grid">
+      <div class="svc-card">
+        <div class="svc-icon">🧱</div>
+        <div>
+          <div class="svc-name">Plaquisterie &amp; Placo</div>
+          <div class="svc-desc">Pose de plaques de plâtre (BA13), création de cloisons séparatives, doublage des murs, pose de faux-plafonds fixes ou suspendus.</div>
+        </div>
+        <button class="svc-btn" onclick="showPage('devis')">Demander un prix</button>
+      </div>
+      <div class="svc-card">
+        <div class="svc-icon">🌡️</div>
+        <div>
+          <div class="svc-name">Isolation Thermique &amp; Acoustique</div>
+          <div class="svc-desc">Isolation des combles aménagés ou perdus, isolation des murs par l'intérieur (ITI), cloisons phoniques. Économies d'énergie garanties.</div>
+        </div>
+        <button class="svc-btn" onclick="showPage('devis')">Demander un prix</button>
+      </div>
+      <div class="svc-card">
+        <div class="svc-icon">🏠</div>
+        <div>
+          <div class="svc-name">Aménagement Intérieur</div>
+          <div class="svc-desc">Optimisation des espaces, création de dressings sur mesure en placo, niches décoratives, coffrages techniques, aménagement de combles.</div>
+        </div>
+        <button class="svc-btn" onclick="showPage('devis')">Demander un prix</button>
+      </div>
+      <div class="svc-card">
+        <div class="svc-icon">✨</div>
+        <div>
+          <div class="svc-name">Finitions &amp; Enduits</div>
+          <div class="svc-desc">Jointoiement de placo de haute qualité, ratissage complet des murs pour un rendu lisse parfait, bandes armées, préparation avant peinture.</div>
+        </div>
+        <button class="svc-btn" onclick="showPage('devis')">Demander un prix</button>
+      </div>
+    </div>
+    <div class="services-note">
+      <span>💡</span>
+      <p><strong>Besoin d'un projet clé en main ?</strong> Travaillant en rénovation tous corps d'état, je peux également prendre en charge ou coordonner d'autres travaux complémentaires (peinture, revêtements). <a onclick="showPage('devis')">Expliquez-moi votre besoin</a>.</p>
+    </div>
+  </div>
+</div>
+
+<div id="page-realisations" class="page">
+  <div class="real-wrap">
+    <div class="section-head">
+      <div class="section-tag">Chantiers récents</div>
+      <h2 class="section-title">Mes Réalisations</h2>
+      <p class="real-intro">Découvrez en images quelques exemples de chantiers réalisés dans la région : maisons neuves, rénovations d'appartements et aménagements de commerces.</p>
+    </div>
+    <div class="real-grid" id="realisations-container">
+      </div>
+  </div>
+</div>
+
+<div id="page-contacter" class="page">
+  <div class="contact-wrap">
+    <div class="section-head">
+      <div class="section-tag">Disponibilité immédiate</div>
+      <h2 class="section-title">Contactez l'entreprise</h2>
+    </div>
+    <div class="contact-cards">
+      <div class="contact-card">
+        <div class="cc-icon">📞</div>
+        <div class="cc-label">Téléphone direct</div>
+        <div class="cc-val"><a href="tel:0658157971">06 58 15 79 71</a></div>
+        <div class="cc-sub">Du lundi au samedi<br>de 8h00 à 19h00</div>
+      </div>
+      <div class="contact-card">
+        <div class="cc-icon">✉️</div>
+        <div class="cc-label">Email professionnel</div>
+        <div class="cc-val"><a href="mailto:chabrandjonathan@hotmail.com">chabrandjonathan@hotmail.com</a></div>
+        <div class="cc-sub">Réponse rapide aux messages et demandes de documents.</div>
+      </div>
+    </div>
+    <div class="contact-zone">
+      <div class="cz-icon">🚚</div>
+      <div>
+        <div class="cz-title">Zone de déplacement</div>
+        <div class="cz-text">Basé à Bompas, j'interviens sur l'ensemble du département des <strong>Pyrénées-Orientales (66)</strong> : Perpignan, Canet-en-Roussillon, Saint-Estève, Rivesaltes, Argeles-sur-Mer, Thuir, Prades...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="page-devis" class="page">
+  <div class="devis-wrap">
+    <div class="section-head">
+      <div class="section-tag">Gratuit & Sans engagement</div>
+      <h2 class="section-title">Demande de Devis</h2>
+    </div>
+    <div class="devis-grid">
+      <div>
+        <div class="devis-steps">
+          <h3>Comment ça marche ?</h3>
+          <div class="step"><div class="step-n">1</div><div><strong>Remplissez le formulaire</strong><p>Décrivez votre projet en quelques lignes ci-contre.</p></div></div>
+          <div class="step"><div class="step-n">2</div><div><strong>Jonathan vous rappelle</strong><p>Vous recevez une réponse rapide pour convenir d'un rendez-vous et établir le devis.</p></div></div>
+        </div>
+
+        <div style="margin-top:28px;padding:20px;background:var(--bg2);border-radius:8px;border:1px solid var(--border)">
+          <div style="font-size:0.7rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--bl2);margin-bottom:12px">Contact direct</div>
+          <a href="tel:0658157971" style="display:flex;align-items:center;gap:10px;color:var(--txt);text-decoration:none;padding:10px 0;border-bottom:1px solid var(--border);font-size:0.9rem;">📞 06 58 15 79 71</a>
+          <a href="mailto:chabrandjonathan@hotmail.com" style="display:flex;align-items:center;gap:10px;color:var(--txt);text-decoration:none;padding:10px 0;font-size:0.9rem;">✉️ chabrandjonathan@hotmail.com</a>
+        </div>
+      </div>
+      
+      <div class="form-box reveal">
+        <form name="demande-devis" id="devis-form" method="POST" data-netlify="true" onsubmit="envoyerMonDevis(event)">
+          <input type="hidden" name="form-name" value="demande-devis" />
+          
+          <div class="fg-row">
+            <div class="fg"><label>Prénom *</label><input type="text" name="prenom" required placeholder="Prénom"/></div>
+            <div class="fg"><label>Nom *</label><input type="text" name="nom" required placeholder="Nom"/></div>
+          </div>
+          <div class="fg-row">
+            <div class="fg"><label>Téléphone *</label><input type="tel" name="telephone" required placeholder="06 00 00 00 00"/></div>
+            <div class="fg"><label>Email</label><input type="email" name="email" placeholder="votre@email.com"/></div>
+          </div>
+          <div class="fg">
+            <label>Service souhaité *</label>
+            <select name="service" required>
+              <option value="">-- Choisissez un service --</option>
+              <option value="Plaquisterie">Plaquisterie</option>
+              <option value="Isolation">Isolation</option>
+              <option value="Aménagement intérieur">Aménagement intérieur</option>
+              <option value="Finitions & Enduits">Finitions & Enduits</option>
+              <option value="Autre">Autre</option>
+            </select>
+          </div>
+          <div class="fg"><label>Ville / Commune *</label><input type="text" name="ville" required placeholder="Votre commune dans les PO"/></div>
+          <div class="fg"><label>Description des travaux *</label><textarea name="description" required placeholder="Surface, type de chantier, délais souhaités..."></textarea></div>
+          
+          <button type="submit" class="form-submit" id="btn-soumettre-devis">Envoyer ma demande →</button>
+
+          <div id="statut-succes" style="display:none; margin-top:15px; padding:15px; color:#4CAF50; border:1px solid #4CAF50; background:rgba(76,175,80,0.1); border-radius:5px; text-align:center; font-weight:600;">
+            ✅ Demande envoyée avec succès ! Jonathan vous recontactera rapidement.
+          </div>
+          <div id="statut-erreur" style="display:none; margin-top:15px; padding:15px; color:#f44336; border:1px solid #f44336; background:rgba(244,67,54,0.1); border-radius:5px; text-align:center; font-weight:600;">
+            ❌ Une erreur est survenue lors de l'envoi. Veuillez réessayer.
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="admin-overlay">
+  <div class="admin-panel">
+    <div class="admin-top">
+      <h2>Espace Professionnel – Gestion</h2>
+      <button class="admin-close" onclick="closeAdmin()">✕</button>
+    </div>
+    
+    <div class="admin-secure-note">
+      🔒 Cet espace utilise les services d'authentification sécurisés Netlify Identity. Seul l'administrateur du site peut valider les modifications de données.
+    </div>
+
+    <div class="admin-tabs2">
+      <button class="atab active" id="atab-subs" onclick="setAdminTab('subs')">Demandes reçues</button>
+      <button class="atab" id="atab-real" onclick="setAdminTab('real')">Gérer les Réalisations</button>
+      <button class="atab" id="atab-clients" onclick="setAdminTab('clients')">Fichier Clients</button>
+    </div>
+
+    <div id="apanel-subs" class="apanel">
+      <div id="admin-subs-list"></div>
+    </div>
+
+    <div id="apanel-real" class="apanel" style="display:none">
+      <div class="real-upload-box" onclick="document.getElementById('real-file-input').click()">
+        <span style="font-size:2rem">📸</span>
+        <p><strong>Cliquez ici pour ajouter une photo de chantier</strong><br>Formats acceptés : JPG, PNG</p>
+        <input type="file" id="real-file-input" accept="image/*" onchange="uploadReal(event)"/>
+      </div>
+      <div class="real-admin-list" id="admin-real-container"></div>
+    </div>
+
+    <div id="apanel-clients" class="apanel" style="display:none">
+      <div id="admin-users-list"></div>
+    </div>
+
+    <div style="margin-top:32px;display:flex;justify-content:flex-end">
+      <button class="btn-sm btn-logout" onclick="logoutIdentity()">Se déconnecter de l'administration</button>
+    </div>
+  </div>
+</div>
+
+<div id="admin-login-modal">
+  <div class="al-box">
+    <button class="al-close" onclick="closeAdminLogin()">✕</button>
+    <div class="al-icon">🔑</div>
+    <h2>Connexion Administration</h2>
+    <p>Accès réservé à l'entreprise JC Plaquiste.</p>
+    <div class="auth-actions" style="justify-content:center">
+      <button type="button" onclick="netlifyIdentity.open('login')">Ouvrir la session Admin</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="f-logo">JC <em>Plaquiste</em></div>
+  <div class="f-copy">&copy; 2026 JC Plaquiste. Tous droits réservés.</div>
+  <button class="f-admin" onclick="openAdminClick()">Administration</button>
+</footer>
+
+<script>
+// ══ NAVIGATION EN SINGLE-PAGE ══
+function showPage(pageId) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  
+  const targetPage = document.getElementById('page-' + pageId);
+  if(targetPage) targetPage.classList.add('active');
+  
+  // Trouve l'index du bouton pour lui mettre la classe active
+  const tabs = ['accueil', 'services', 'realisations', 'contacter', 'devis'];
+  const idx = tabs.indexOf(pageId);
+  if(idx !== -1) {
+    const btn = document.querySelectorAll('.tabs .tab')[idx];
+    if(btn) btn.classList.add('active');
+  }
+  window.scrollTo(0,0);
+}
+
+// Interception et envoi sécurisé du formulaire à Netlify
+function envoyerMonDevis(e) {
+  e.preventDefault();
+
+  const monFormulaire = document.getElementById('devis-form');
+  const btn = document.getElementById('btn-soumettre-devis');
+  const msgSucces = document.getElementById('statut-succes');
+  const msgErreur = document.getElementById('statut-erreur');
+  const formData = new FormData(monFormulaire);
+
+  btn.disabled = true;
+  btn.textContent = "Envoi en cours...";
+  msgSucces.style.display = "none";
+  msgErreur.style.display = "none";
+
+  fetch("/", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams(formData).toString(),
+  })
+  .then(() => {
+    msgSucces.style.display = "block";
+    monFormulaire.reset();
+  })
+  .catch((error) => {
+    console.error(error);
+    msgErreur.style.display = "block";
+  })
+  .finally(() => {
+    btn.disabled = false;
+    btn.textContent = "Envoyer ma demande →";
+  });
+}
+
+// ══ BASE DE DONNÉES SIMULÉE / LOCALE SANS BASE EXTÉRIEURE ══
+  saveReal(arr){
+    localStorage.setItem('jc_real', JSON.stringify(arr));
+    renderReal();
+    renderAdminReal();
+  },
+  addReal(cat, title, desc, imgBase64){
+    let arr = this.getReal();
+    arr.unshift({ id:Date.now(), cat, title, desc, img:imgBase64 });
+    this.saveReal(arr);
+  },
+  delReal(id){
+    let arr = this.getReal();
+    arr = arr.filter(x => x.id !== id);
+    this.saveReal(arr);
+  },
+  updateReal(id, title, desc){
+    let arr = this.getReal();
+    let x = arr.find(i => i.id === id);
+    if(x){ x.title = title; x.desc = desc; }
+    localStorage.setItem('jc_real', JSON.stringify(arr));
+    renderReal();
+  }
+};
+
+// ══ RENDU PUBLIC DES RÉALISATIONS ══
+function renderReal(){
+  const container = document.getElementById('realisations-container');
+  // ══ RÉCUPÉRATION DES DONNÉES DU CMS ══
+const DB = {
+  // Cette fonction va lire le dossier créé par le CMS
+  async loadRealFromCMS() {
+    try {
+      // On demande au site d'aller lire la liste des réalisations
+      const response = await fetch('/_data/realisations.json');
+      if (!response.ok) return [];
+      const items = await response.json();
+      return items;
+    } catch (error) {
+      console.error("Erreur lors du chargement des chantiers:", error);
+      return [];
+    }
+  }
+};
+  container.innerHTML = items.map(x => `
+    <div class="real-card">
+      <img class="real-img" src="${x.img}" alt="Chantier"/>
+      <div class="real-body">
+        <div class="real-cat">${escapeHtml(x.cat || 'PLAQUISTERIE')}</div>
+        <div class="real-title">${escapeHtml(x.title || 'Isolation / Cloisons')}</div>
+        <div class="real-desc">${escapeHtml(x.desc || '')}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ══ GESTION DE L'ANIMATION REVEAL ══
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('vis'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// ══ SÉCURITÉ DE BASE & ESCAPE ══
+function escapeHtml(str) {
+  if(!str) return '';
+  return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+}
+
+// ══ FONCTIONS ADMIN NETLIFY IDENTITY ══
+let currentAdminTab = 'subs';
+
+function openAdminClick(){
+  const user = netlifyIdentity.currentUser();
+  if(user) {
+    document.getElementById('admin-overlay').classList.add('open');
+    setAdminTab('subs');
+    loadAdminData();
+  } else {
+    document.getElementById('admin-login-modal').classList.add('open');
+  }
+}
+function closeAdmin(){ document.getElementById('admin-overlay').classList.remove('open'); }
+function closeAdminLogin(){ document.getElementById('admin-login-modal').classList.remove('open'); }
+
+function setAdminTab(t){
+  currentAdminTab = t;
+  document.querySelectorAll('.atab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.apanel').forEach(p => p.style.display = 'none');
+  
+  document.getElementById('atab-' + t).classList.add('active');
+  document.getElementById('apanel-' + t).style.display = 'block';
+}
+
+function logoutIdentity(){
+  netlifyIdentity.logout();
+  closeAdmin();
+}
+
+netlifyIdentity.on('login', user => {
+  closeAdminLogin();
+  document.getElementById('admin-overlay').classList.add('open');
+  setAdminTab('subs');
+  loadAdminData();
+});
+netlifyIdentity.on('logout', () => { closeAdmin(); });
+
+// Simulation chargement données admin
+function loadAdminData(){
+  renderAdminReal();
+  document.getElementById('admin-subs-list').innerHTML = '<div class="empty-msg">Les formulaires sont stockés de manière sécurisée directement dans votre espace client en ligne Netlify Forms.</div>';
+  document.getElementById('admin-users-list').innerHTML = '<div class="empty-msg">Aucun utilisateur enregistré (comptes désactivés).</div>';
+}
+
+function renderAdminReal(){
+  const container = document.getElementById('admin-real-container');
+  const items = DB.getReal();
+  container.innerHTML = items.map(x => `
+    <div class="real-admin-item">
+      <button class="real-admin-del" onclick="DB.delReal(${x.id})">✕</button>
+      <img class="real-admin-img" src="${x.img}"/>
+      <div class="real-admin-meta">
+        <input type="text" value="${escapeHtml(x.title)}" onchange="DB.updateReal(${x.id}, this.value, this.nextElementSibling.value)" placeholder="Titre..."/>
+        <textarea onchange="DB.updateReal(${x.id}, this.previousElementSibling.value, this.value)" placeholder="Description du chantier...">${escapeHtml(x.desc)}</textarea>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ══ RÉCUPÉRATION DES DONNÉES DU CMS ══
+const DB = {
+  async loadRealFromCMS() {
+    try {
+      const response = await fetch('/_data/realisations.json');
+      if (!response.ok) return [];
+      return await response.json();
+    } catch (error) {
+      console.error("Erreur lors du chargement des chantiers:", error);
+      return [];
+    }
+  }
+};
+
+// ══ RENDU PUBLIC DES RÉALISATIONS ══
+async function renderReal(){
+  const container = document.getElementById('realisations-container');
+  const items = await DB.loadRealFromCMS();
+  
+  if(!items || items.length === 0){
+    container.innerHTML = `<div class="real-empty" style="grid-column:1/-1">
+      <div class="re-icon">📐</div>
+      <p><strong>Aucune photo de chantier pour le moment.</strong><br>L'artisan mettra à jour cette galerie très prochainement lors de ses prochains chantiers finis.</p>
+    </div>`;
+    return;
+  }
+  
+  container.innerHTML = items.map(x => `
+    <div class="real-card">
+      <img class="real-img" src="${x.img}" alt="${escapeHtml(x.title || '')}"/>
+      <div class="real-body">
+        <div class="real-cat">PLAQUISTERIE</div>
+        <div class="real-title">${escapeHtml(x.title || 'Isolation / Cloisons')}</div>
+        <div class="real-desc">${escapeHtml(x.desc || '')}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ══ PANNEAU ADMIN REPENSER POUR DECAP CMS ══
+function renderAdminReal(){
+  const container = document.getElementById('admin-real-container');
+  container.innerHTML = `
+    <div class="empty-msg" style="grid-column: 1/-1; text-align:center;">
+      Pour ajouter, modifier ou supprimer des réalisations, utilisez l'interface Decap CMS directement à l'adresse : 
+      <br><br>
+      <a href="/admin/" style="color:var(--bl2); font-weight:bold; text-decoration:none; font-size:1.1rem;">Accéder au panneau de contrôle complet ↗</a>
+    </div>`;
+}
+</script>
+
+</body>
+</html>

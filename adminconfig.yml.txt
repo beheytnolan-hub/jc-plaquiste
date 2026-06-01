@@ -1,0 +1,19 @@
+backend:
+  name: git-gateway
+  branch: main # Mets 'master' si ta branche principale sur GitHub s'appelle master
+
+local_backend: true # Te permet de tester sur ton ordi avant de publier
+
+media_folder: "images/uploads" # Où seront stockées les photos de tes chantiers
+public_folder: "/images/uploads"
+
+collections:
+  - name: "realisations"
+    label: "Réalisations (Chantiers)"
+    folder: "_data/realisations" # Où le CMS va enregistrer les textes
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Titre du chantier", name: "title", widget: "string" }
+      - { label: "Description", name: "desc", widget: "text" }
+      - { label: "Photo du chantier", name: "img", widget: "image" }
